@@ -30,6 +30,7 @@ aws ecs create-cluster --cluster-name your-ecs-cluster
 Create an ECS Task Definition: Create a ecs-task-def.json file in your repository
 
 # Create the roles required for the task definition
+# Create ECS SG to allow HTTP and HTTPS 
 
 # Register the Task Definition:
 aws ecs register-task-definition --cli-input-json file://ecs-task-def.json
@@ -37,10 +38,10 @@ aws ecs register-task-definition --cli-input-json file://ecs-task-def.json
 # Create an ECS Service:
 aws ecs create-service \
 --cluster github-actions-tutorial-ecs-cluster \
---service-name your-ecs-service \
+--service-name github-actions-tutorial-ecs-service \
 --task-definition your-task-family --desired-count 1 \
 --launch-type FARGATE \
---network-configuration "awsvpcConfiguration={subnets=[subnet-0de347e19601ecf3a],assignPublicIp=ENABLED}"
+--network-configuration "awsvpcConfiguration={subnets=[subnet-0de347e19601ecf3a],securityGroups=[sg-0feee798ceb877db1],assignPublicIp=ENABLED}"
 
 
 --network-configuration "awsvpcConfiguration={subnets=[us-east-1a],securityGroups=[your-security-group-id],assignPublicIp=ENABLED}"
