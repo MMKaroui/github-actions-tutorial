@@ -33,6 +33,8 @@ Create an ECS Task Definition: Create a ecs-task-def.json file in your repositor
 # Create ECS SG to allow HTTP and HTTPS 
 
 ------------- Repeat after deleting the service and task in ECS ----------
+# Create CloudWatch Log directory
+aws logs create-log-group --log-group-name /ecs/github-actions-tutorial-log-group
 
 # Register the Task Definition:
 aws ecs register-task-definition --cli-input-json file://ecs-task-def.json
@@ -44,6 +46,9 @@ aws ecs create-service \
 --task-definition github-actions-tutorial-task-def-family --desired-count 1 \
 --launch-type FARGATE \
 --network-configuration "awsvpcConfiguration={subnets=[subnet-0de347e19601ecf3a],securityGroups=[sg-0feee798ceb877db1],assignPublicIp=ENABLED}"
+
+# Check ECS Task Status:
+aws ecs describe-tasks --cluster github-actions-tutorial-ecs-cluster --tasks your-task-id
 
 # Commmit code changes to deploy code from github to ECS using GitHub Actions
 
