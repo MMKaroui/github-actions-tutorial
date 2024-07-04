@@ -1,0 +1,23 @@
+# Step 1: Build and Test the Docker Image
+docker build -t Your-Website:latest . (replace Your-Website as shown below "githubactionsweb")
+docker build -t github-actions-tutorial:latest .
+
+# Run the Container
+docker run -p 8080:80 github-actions-tutorial:latest
+
+# Open localhost:8080 to browse the website
+http://localhost:8080
+
+# Step 3: Push the Docker Image to a Container Registry (ECR)
+# Create an ECR repo 
+aws ecr create-repository --repository-name github-actions-tutorial
+
+# Login to ECR 
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 385320741566.dkr.ecr.us-east-1.amazonaws.com/github-actions-tutorial
+
+# Tag and Push your Image               
+docker tag githubactionsweb:latest 385320741566.dkr.ecr.us-east-1.amazonaws.com/github-actions-tutorial
+docker push 385320741566.dkr.ecr.us-east-1.amazonaws.com/github-actions-tutorial
+
+# Step 4: Set Up GitHub Actions for Deployment
+# Create a .github/workflows/deploy.yml file in your repository:
