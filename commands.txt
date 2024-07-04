@@ -32,6 +32,8 @@ Create an ECS Task Definition: Create a ecs-task-def.json file in your repositor
 # Create the roles required for the task definition
 # Create ECS SG to allow HTTP and HTTPS 
 
+------------- Repeat after deleting the service and task in ECS ----------
+
 # Register the Task Definition:
 aws ecs register-task-definition --cli-input-json file://ecs-task-def.json
 
@@ -39,10 +41,11 @@ aws ecs register-task-definition --cli-input-json file://ecs-task-def.json
 aws ecs create-service \
 --cluster github-actions-tutorial-ecs-cluster \
 --service-name github-actions-tutorial-ecs-service \
---task-definition your-task-family --desired-count 1 \
+--task-definition github-actions-tutorial-task-def-family --desired-count 1 \
 --launch-type FARGATE \
 --network-configuration "awsvpcConfiguration={subnets=[subnet-0de347e19601ecf3a],securityGroups=[sg-0feee798ceb877db1],assignPublicIp=ENABLED}"
 
+# Commmit code changes to deploy code from github to ECS using GitHub Actions
 
 --network-configuration "awsvpcConfiguration={subnets=[us-east-1a],securityGroups=[your-security-group-id],assignPublicIp=ENABLED}"
 
