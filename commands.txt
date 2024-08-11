@@ -13,11 +13,13 @@ http://localhost:8080
 aws ecr create-repository --repository-name github-actions-tutorial
 
 # Login to ECR 
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 385320741566.dkr.ecr.us-east-1.amazonaws.com/github-actions-tutorial
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 323232323232.dkr.ecr.us-east-1.amazonaws.com/github-actions-tutorial
 
 # Tag and Push your Image               
-docker tag githubactionsweb:latest 385320741566.dkr.ecr.us-east-1.amazonaws.com/github-actions-tutorial
-docker push 385320741566.dkr.ecr.us-east-1.amazonaws.com/github-actions-tutorial
+docker tag github-actions-tutorial:latest 323232323232.dkr.ecr.us-east-1.amazonaws.com/github-actions-tutorial
+docker push 323232323232.dkr.ecr.us-east-1.amazonaws.com/github-actions-tutorial
+
+# Create github repository
 
 # Step 4: Set Up GitHub Actions for Deployment
 # Create a .github/workflows/deploy.yml file in your repository:
@@ -25,6 +27,7 @@ docker push 385320741566.dkr.ecr.us-east-1.amazonaws.com/github-actions-tutorial
 # Step 5: Create ECS Task Definition and Service
 # Create ECS cluster 
 aws ecs create-cluster --cluster-name your-ecs-cluster
+aws ecs create-cluster --cluster-name github-actions-tutorial-ecs-cluster
 
 # Create Task definition
 Create an ECS Task Definition: Create a ecs-task-def.json file in your repository
@@ -38,17 +41,27 @@ aws logs create-log-group --log-group-name /ecs/github-actions-tutorial-log-grou
 
 # Register the Task Definition:
 aws ecs register-task-definition --cli-input-json file://ecs-task-def.json
+(actual command below)
+aws ecs register-task-definition --cli-input-json "$(cat ./.aws/ecs-task-def.json)" --profile default-tiger4code-account --region us-east-1
 
 # Create an ECS Service:
 aws ecs create-service \
 --cluster github-actions-tutorial-ecs-cluster \
 --service-name github-actions-tutorial-ecs-service \
---task-definition github-actions-tutorial-task-def-family --desired-count 1 \
+--task-definition github-actions-tutorial-task-def-family \
+--desired-count 1 \
 --launch-type FARGATE \
 --network-configuration "awsvpcConfiguration={subnets=[subnet-0de347e19601ecf3a],securityGroups=[sg-0feee798ceb877db1],assignPublicIp=ENABLED}"
 
+--profile default-tiger4code-account 
+--region us-east-1
+
+
 # Check ECS Task Status:
-aws ecs describe-tasks --cluster github-actions-tutorial-ecs-cluster --tasks your-task-id
+aws ecs describe-tasks --cluster github-actions-tutorial-ecs-cluster \
+--tasks 0a2cd490f6cd4b4ab547768510a0e3e7 \
+--profile default-tiger4code-account \
+--region us-east-1
 
 # Commmit code changes to deploy code from github to ECS using GitHub Actions
 
