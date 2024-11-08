@@ -31,7 +31,7 @@ on:
     branches: [ "main" ]
 
 env:
-  AWS_REGION: "us-east-1"                   # set this to your preferred AWS region, e.g. us-west-1
+  AWS_REGION: "eu-north-1"                   # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: "github-actions-tutorial"   # set this to your Amazon ECR repository name
   ECS_SERVICE: "github-actions-tutorial-ecs-service"                 # set this to your Amazon ECS service name
   ECS_CLUSTER: "github-actions-tutorial-ecs-cluster"  # set this to your Amazon ECS cluster name
@@ -58,7 +58,7 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_REGION }}
+        aws-region: "eu-north-1"
 
     - name: Login to Amazon ECR
       id: login-ecr
